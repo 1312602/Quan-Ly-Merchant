@@ -8,6 +8,7 @@
         temp = (USER_INFORMATION)model;
     }
 
+    int NumberUnreadMessage = (int)Session[WebMVC.Common.CommonConstants.NUMBER_UNREAD_MESSAGE];
 }
 
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -204,7 +205,7 @@
                 <!-- /.dropdown-alerts -->
             </li>*@
         <!-- /.dropdown -->
-        <a href="@Url.Action("Index", "Message")" class="btn btn-info">Message <div class="btn btn-danger"> 1</div></a>
+        <a href="@Url.Action("Index", "Message")" class="btn btn-info">Message <div class="btn btn-danger">@NumberUnreadMessage</div></a>
         <li class="dropdown">
             
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -225,6 +226,9 @@
                         <a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
                     }
 
+                </li>
+                <li>
+                    <a href="@Url.Action("ChangePassword", "Login")"><i class="fa fa-pencil fa-fw"></i> Đổi mật khẩu</a>
                 </li>
                 @*<li>
                         <a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
@@ -286,14 +290,13 @@
 
                 </li>
                 <li>
-                    <a href="tables.html"><i class="fa fa-table fa-fw"></i> Report</a>
+                    <a href="@Url.Action("Index", "Report")"><i class="fa fa-edit fa-fw"></i>Report</a>
                 </li>
                 <li>
-                    @if (Convert.ToChar(temp.UserType) == 'M')
+                    @if (Convert.ToChar(temp.UserType) != 'M')
                     {
-                        <a href="@Url.Action("Detail", "Statistical")"><i class="fa fa-edit fa-fw"></i> Thống kê</a>
+                        <a href="@Url.Action("Index", "Statistical")"><i class="fa fa-edit fa-fw"></i> Thống kê</a>
                     }
-                    else{ <a href="@Url.Action("Index", "Statistical")"><i class="fa fa-edit fa-fw"></i> Thống kê</a>}
                 </li>
                 @if (Convert.ToChar(temp.UserType) != 'M' && Convert.ToChar(temp.UserType) != 'A')
                 {

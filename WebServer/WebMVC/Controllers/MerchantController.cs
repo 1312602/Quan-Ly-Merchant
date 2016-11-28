@@ -6,11 +6,13 @@ using System.Web;
 using System.Web.Mvc;
 using WebMVC.Common;
 using WebMVC.EntityFramework;
-
+using PagedList;
+using Rotativa;
 namespace WebMVC.Controllers
 {
     public class MerchantController : BaseController
     {
+        private MVCDbContext db = new MVCDbContext();
         // GET: Merchant
         public ActionResult Index()
         {
@@ -42,5 +44,6 @@ namespace WebMVC.Controllers
         {
             return View();
         }
+       
     }
 }

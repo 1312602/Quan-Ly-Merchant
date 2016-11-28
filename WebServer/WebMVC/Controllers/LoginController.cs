@@ -42,7 +42,6 @@ namespace WebMVC.Controllers
                 list = response.Content.ReadAsAsync<List<USER_INFORMATION>>().Result;
                 //return RedirectToAction("Index", "Home");
             }
-            //System.Console.Write(list[0].UserName);
             if(list.Count == 1)
             {
                 var userSession = new USER_INFORMATION();
@@ -61,6 +60,51 @@ namespace WebMVC.Controllers
         {
             Session.Abandon();
             return RedirectToAction("Index", "Login");
+        }
+
+        public ActionResult ChangePassword()
+        {
+            return View("ChangePassword");
+        }
+
+        public ActionResult ChangePassword_Action(string currentPassword, string newPassword, string confirmPassword)
+        {
+            if (String.IsNullOrEmpty(currentPassword) || String.IsNullOrEmpty(newPassword) || String.IsNullOrEmpty(confirmPassword) || newPassword != confirmPassword)
+            {
+                TempData["AlertMessage"] = "Vui lòng nhập đầy đủ thông tin!!!";
+                TempData["AlertType"] = "alert-warning";
+                return View("ChangePassword"); //khong nhat thiet phai co model
+            }
+            List<USER_INFORMATION> list = new List<USER_INFORMATION>();
+
+            //HttpClient client = new HttpClient();
+            //client.BaseAddress = new Uri("http://localhost:21212/");
+
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var result = (USER_INFORMATION)Session[CommonConstants.USER_SESSION];
+            HttpClient client = new AccessAPI().Access();
+            HttpResponseMessage response = client.GetAsync(string.Format("api/USER_INFORMATION/Change?username={0}&password={1}&newpassword={2}", result.UserName.ToString(), Encryptor.MD5Hash(currentPassword), Encryptor.MD5Hash(newPassword))).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var check = response.Content.ReadAsAsync<bool>().Result;
+                if (check == true)
+                {
+                    TempData["AlertMessage"] = "Đổi mật khẩu thành công !!!";
+                    TempData["AlertType"] = "alert-success";
+                }
+                else
+                {
+                    TempData["AlertMessage"] = "Vui lòng nhập đúng mật khẩu hiện tại!!!";
+                    TempData["AlertType"] = "alert-warning";
+                }
+                return View("ChangePassword");
+            }
+            else
+            {
+                TempData["AlertMessage"] = "Vui lòng nhập đúng mật khẩu hiện tại!!!";
+                TempData["AlertType"] = "alert-warning";
+                return View("Index"); //khong nhat thiet phai co model
+            }
         }
     }
 }
