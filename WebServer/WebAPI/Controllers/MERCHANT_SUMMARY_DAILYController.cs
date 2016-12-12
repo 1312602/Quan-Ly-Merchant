@@ -142,6 +142,18 @@ namespace WebAPI.Controllers
             var dbReturn = db.Database.SqlQuery<Models.MerchantSummaryDailyTiny>("SP_GetMerchantSummary_Default").ToList();
             return dbReturn;
         }
+        [HttpGet]
+        public List<Models.MerchantSummaryDailyTiny> FindMerchantSummaryElement(string searchString)
+        {
+            object[] parameter =
+                {
+                    new SqlParameter("@Element", searchString)
+                };
+
+            var res = db.Database.SqlQuery<Models.MerchantSummaryDailyTiny>("exec SP_FindMerchantSummaryElement @Element", parameter).ToList();
+            return res;
+  
+        }
 
         [HttpGet]
         public List<Models.MerchantSummaryDailyTiny> GetMerchantSummaryForAgentDefault(string AgentCode)
@@ -152,6 +164,19 @@ namespace WebAPI.Controllers
                 };
             var res = db.Database.SqlQuery<Models.MerchantSummaryDailyTiny>("SP_GetMerchantSummaryForAgent_Default @AgentCode", paremeter).ToList();
             return res;
+        }
+        [HttpGet]
+        public List<Models.MerchantSummaryDailyTiny> FindMerchantSummaryForAgentElement(string AgentCode,string searchString)
+        {
+            object[] parameter =
+                {
+                    new SqlParameter("@Element", searchString),
+                    new SqlParameter("@AgentCode", AgentCode),
+                };
+
+            var res = db.Database.SqlQuery<Models.MerchantSummaryDailyTiny>("exec SP_FindMerchantSummaryElementByAgent @Element,@AgentCode", parameter).ToList();
+            return res;
+
         }
 
         [HttpGet]
@@ -168,6 +193,30 @@ namespace WebAPI.Controllers
             return dbReturn;
         }
 
-       
+        [HttpGet]
+        public List<MERCHANT_SUMMARY_DAILY> GetReportDataGenerality(string startDate, string endDate)
+        {
+            object[] paremeter =
+               {
+                    new SqlParameter("@startDate", startDate),
+                    new SqlParameter("@endDate", endDate)
+                };
+            var dbReturn = db.Database.SqlQuery<MERCHANT_SUMMARY_DAILY>("SP_GetReportData_Generality @startDate, @endDate", paremeter).ToList();
+            return dbReturn;
+        }
+
+        [HttpGet]
+        public List<Models.Statistic> GetReportDateForLineChartGenerality(string startDate, string endDate)
+        {
+            object[] paremeter =
+               {
+                    new SqlParameter("@startDate", startDate),
+                    new SqlParameter("@endDate", endDate)
+                };
+            var dbReturn = db.Database.SqlQuery<Models.Statistic>("SP_GetReportDataForLineChart_Generality @startDate, @endDate", paremeter).ToList();
+            return dbReturn;
+        }
+
+
     }
 }

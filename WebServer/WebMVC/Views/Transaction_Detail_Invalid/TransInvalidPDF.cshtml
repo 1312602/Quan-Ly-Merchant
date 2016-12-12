@@ -1,0 +1,40 @@
+﻿
+@model List<WebMVC.Models.TransInvalidTiny>
+    @{
+        ViewBag.Title = "Transaction_Detail_Invalid";
+    }
+
+    <h2>Transaction_Detail_Invalid</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Transaction Code</th>
+                <th>ReportDate</th>
+                <th>Merchant Code</th>
+                <th>Transaction Type</th>
+                <th>Account Number</th>
+                <th>Card Type</th>
+                <th>Amount</th>
+                <th>Error Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    
+                    <td>@Html.DisplayFor(model => item.TransactionCode)</td>
+                    <td>@item.ReportDate.ToString("yyyy-MM-dd")</td>
+                    <td>@Html.DisplayFor(model => item.MerchantCode)</td>
+                    <td>@Html.DisplayFor(model => item.TransactionTypeCode)</td>
+                    <td>@Html.DisplayFor(model => item.AccountNumber)</td>
+                    <td>@Html.DisplayFor(model => item.CardtypeCode)</td>
+                    <td>@Html.DisplayFor(model => item.TransactionAmount)</td>
+                    <td>@Html.DisplayFor(model => item.ErrorMessage)</td>
+               
+                </tr>
+            }
+
+        </tbody>
+    </table>
+

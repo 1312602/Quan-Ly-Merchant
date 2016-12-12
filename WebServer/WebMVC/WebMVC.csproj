@@ -577,6 +577,7 @@
     <Content Include="Assets\dist\js\sb-admin-2.js" />
     <Content Include="Assets\images\bg.jpg" />
     <Content Include="Assets\images\process.gif" />
+    <Content Include="Assets\js\bootstrap-datepicker.js" />
     <Content Include="Assets\js\flot-data.js" />
     <Content Include="Assets\js\flot\excanvas.min.js" />
     <Content Include="Assets\js\flot\flot-data.js" />
@@ -588,6 +589,7 @@
     <Content Include="Assets\js\jquery.bootpag.js" />
     <Content Include="Assets\css\jquery.dataTables.min.css" />
     <Content Include="Assets\js\jquery.min.js" />
+    <Content Include="Assets\js\moment.js" />
     <Content Include="Assets\js\morris-data.js" />
     <Content Include="Assets\js\morris\morris-data.js" />
     <Content Include="Assets\js\morris\morris.js" />
@@ -635,7 +637,9 @@
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RetrivalController.cs" />
+    <Compile Include="Controllers\RetrivalInvalidController.cs" />
     <Compile Include="Controllers\StatisticalController.cs" />
+    <Compile Include="Controllers\Transaction_Detail_InvalidController.cs" />
     <Compile Include="EntityFramework\AGENT.cs" />
     <Compile Include="EntityFramework\CARD.cs" />
     <Compile Include="EntityFramework\CARD_TYPE.cs" />
@@ -652,8 +656,10 @@
     <Compile Include="EntityFramework\PROCESSOR.cs" />
     <Compile Include="EntityFramework\REGION.cs" />
     <Compile Include="EntityFramework\RETRIVAL.cs" />
+    <Compile Include="EntityFramework\RETRIVAL_INVALID.cs" />
     <Compile Include="EntityFramework\STATUS.cs" />
     <Compile Include="EntityFramework\TRANSACTION_DETAIL.cs" />
+    <Compile Include="EntityFramework\TRANSACTION_DETAIL_INVALID.cs" />
     <Compile Include="EntityFramework\TRANSACTION_TYPE.cs" />
     <Compile Include="EntityFramework\USER_INFORMATION.cs" />
     <Compile Include="Global.asax.cs">
@@ -661,6 +667,7 @@
     </Compile>
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\Statistic.cs" />
+    <Compile Include="Models\TransInvalidTiny.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1016,6 +1023,12 @@
     <Content Include="Views\Login\ChangePassword.cshtml" />
     <Content Include="Views\Management\AddNewAgent.cshtml" />
     <Content Include="Views\Statistical\MerchantStatistical.cshtml" />
+    <Content Include="Views\Transaction_Detail_Invalid\Index.cshtml" />
+    <Content Include="Views\Transaction_Detail_Invalid\TransInvalidPDF.cshtml" />
+    <Content Include="Views\Retrival\ViewRetrivalValid.cshtml" />
+    <Content Include="Views\RetrivalInvalid\Index.cshtml" />
+    <Content Include="Views\RetrivalInvalid\RetrivalError.cshtml" />
+    <Content Include="Views\Management\ViewListMerchant.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1032,6 +1045,9 @@
       <Project>{5567c626-7227-47b8-8880-38090e9c0c12}</Project>
       <Name>WebAPI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

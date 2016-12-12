@@ -18,6 +18,12 @@ namespace WebAPI.Controllers
     {
         private APIDbContext db = new APIDbContext();
 
+        [HttpGet]
+        public List<MERCHANT> FindFilter(string query)
+        {
+            var res = db.Database.SqlQuery<MERCHANT>(query).ToList();
+            return res;
+        }
 
         [HttpGet]
         public List<MERCHANT> FindAllMerchant()
@@ -47,6 +53,19 @@ namespace WebAPI.Controllers
                 };
 
             var res = db.Database.SqlQuery<MERCHANT>("exec sp_FindMerchantElement @Element", parameter).ToList();
+            return res;
+        }
+
+        [HttpGet]
+        public List<MERCHANT> FindMerchantAvailable(string agentCode, string regionCode)
+        {
+            object[] parameter =
+                {
+                    new SqlParameter("@AgentCode", agentCode),
+                    new SqlParameter("@RegionCode", regionCode)
+                };
+
+            var res = db.Database.SqlQuery<MERCHANT>("exec sp_FindMerchantAvailable @AgentCode, @RegionCode", parameter).ToList();
             return res;
         }
 
@@ -208,6 +227,25 @@ namespace WebAPI.Controllers
         private bool MERCHANTExists(string id)
         {
             return db.MERCHANT.Count(e => e.MerchantCode == id) > 0;
+        }
+
+        [HttpPost]
+        public bool UpdateAgentOfMerchant (string merchantCode, MERCHANT merchant)
+        {
+            try
+            {
+                object[] paremeter = 
+                {
+                    new SqlParameter("@MerchantCode", merchantCode),
+                    new SqlParameter("@AgentCode", merchant.AgentCode)
+                };
+                db.Database.ExecuteSqlCommand("exec sp_UpdateAgentOfMerchant @MerchantCode, @AgentCode", paremeter);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
