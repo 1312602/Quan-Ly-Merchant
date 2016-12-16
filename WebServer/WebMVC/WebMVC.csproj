@@ -646,6 +646,7 @@
     <Compile Include="EntityFramework\CITY.cs" />
     <Compile Include="EntityFramework\COUNTRY.cs" />
     <Compile Include="EntityFramework\MERCHANT.cs" />
+    <Compile Include="EntityFramework\MERCHANT_SUMMARY.cs" />
     <Compile Include="EntityFramework\MERCHANT_SUMMARY_DAILY.cs" />
     <Compile Include="EntityFramework\MERCHANT_SUMMARY_MONTHLY.cs" />
     <Compile Include="EntityFramework\MERCHANT_SUMMARY_QUARTERLY.cs" />
@@ -1029,6 +1030,8 @@
     <Content Include="Views\RetrivalInvalid\Index.cshtml" />
     <Content Include="Views\RetrivalInvalid\RetrivalError.cshtml" />
     <Content Include="Views\Management\ViewListMerchant.cshtml" />
+    <Content Include="Views\Management\AgentPDF.cshtml" />
+    <Content Include="Views\Management\MerchantPDF.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

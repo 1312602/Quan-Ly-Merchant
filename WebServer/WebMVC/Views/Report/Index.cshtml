@@ -4,10 +4,10 @@
 @{
     ViewBag.Title = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var listSummary = ViewBag.listSummary as List<MERCHANT_SUMMARY_DAILY>;
-    var listRegion = ViewBag.listRegion as List<MERCHANT_SUMMARY_DAILY>;
-    var listMerchantType = ViewBag.listMerchantType as List<MERCHANT_SUMMARY_DAILY>;
-    var cardTypeReport = ViewBag.cardTypeReport as List<MERCHANT_SUMMARY_DAILY>;
+    var listSummary = ViewBag.listSummary as List<MERCHANT_SUMMARY>;
+    var listRegion = ViewBag.listRegion as List<MERCHANT_SUMMARY>;
+    var listMerchantType = ViewBag.listMerchantType as List<MERCHANT_SUMMARY>;
+    var cardTypeReport = ViewBag.cardTypeReport as List<MERCHANT_SUMMARY>;
     var lineChartData = ViewBag.lineChartData as List<Statistic>;
     //region
     var NorthVN = listRegion.Find(x => x.RegionCode.Contains("NorthVN"));
@@ -38,10 +38,15 @@
 }
 
 <form id="mainform" action="http://localhost:21231/Report" method="POST">
-    <input name="startdate" id="startdate" style="display:none" type="text">
-    <input name="enddate" id="enddate" style="display:none" type="text">
     <input name="reportType" id="reportType" style="display:none" type="text">
-
+    <input name="reportStartDate" id="reportStartDate" style="display:none" type="text">
+    <input name="reportEndDate" id="reportEndDate" style="display:none" type="text">
+    <input name="reportStartMonth" id="reportStartMonth" style="display:none" type="text">
+    <input name="reportEndMonth" id="reportEndMonth" style="display:none" type="text">
+    <input name="reportStartYear" id="reportStartYear" style="display:none" type="text">
+    <input name="reportEndYear" id="reportEndYear" style="display:none" type="text">
+    <input name="reportStartQuarter" id="reportStartQuarter" style="display:none" type="text">
+    <input name="reportEndQuarter" id="reportEndQuarter" style="display:none" type="text">
 
 
     <ul class="nav nav-tabs">
@@ -106,16 +111,28 @@
         </div>
         <div id="report-quarter" class="tab-pane fade">
             <br />
-            <div class="row">
-                <div class="col-sm-4">
+            <div class="col">
+                <div class="row-sm-4">
                     <div class="form-group">
-                        <input class="form-control" value="" id="startQuarter" placeholder="Start Quarter" type="text">
+                        <select id="startQuarter" class="form-control">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select> 
+                        <input class="form-control" value="" id="startQuarterYear" placeholder="Start Quarter" type="text">
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <input class="form-control" value="" id="endQuarter" placeholder="End Quarter" type="text">
+                <div class="row-sm-4">
+                    <select id="endQuarter" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select> 
+                    <input class="form-control" value="" id="endQuarterYear" placeholder="End Quarter" type="text">
                 </div>
-                <div class="col-sm-4">
+                <div class="row-sm-4">
                     <input class="btn btn-success" value="View" id="viewQuarter" type="button">
                 </div>
             </div>
@@ -143,6 +160,7 @@
 
 @section header{
     <i class="fa fa-bar-chart-o"></i> Charts
+    <a href="@Url.Action("Compare", "Report")" class="btn btn-primary">So sánh</a>
 }
 
 <link href="~/Assets/css/myStyle.css" rel="stylesheet" />
@@ -152,40 +170,7 @@
 <script src="/Assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="~/Assets/js/bootstrap-datepicker.js"></script>
 <script src="~/Assets/js/moment.js"></script>
-<!-- The Modal -->
-<div id="RevenueModal" class="modal">
 
-    <!-- Modal content -->
-    <div class="modal-content">
-        <span class="close">×</span>
-
-        <div class="row">
-            <div class="col-xs-9">
-                <p>Total revenue:revenue</p>
-            </div>
-            <div class="col-xs-9 ">
-                <p>Total transaction:</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-9">
-                <p>Total sale: </p>
-            </div>
-            <div class="col-xs-9">
-                <p>Sale count: </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-9">
-                <p>Total return: </p>
-            </div>
-            <div class="col-xs-9 ">
-                <p>Return count: </p>
-            </div>
-        </div>
-    </div>
-
-</div>
 
 <!-- From Card Type -->
 <div id="CardTypeModal" class="modal">
@@ -202,26 +187,26 @@
                 <h3>American Card</h3>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total revenue: @cardTypeReport.FirstOrDefault().AmericanExpressNetAmount</p>
+                        <p>Total revenue: @(cardTypeReport.Count() == 0 ? 0: @cardTypeReport.FirstOrDefault().AmericanExpressNetAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Total transaction: @cardTypeReport.FirstOrDefault().AmericanExpressTransactionCount  </p>
+                        <p>Total transaction: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport.FirstOrDefault().AmericanExpressTransactionCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total sale: @cardTypeReport.FirstOrDefault().AmericanExpressAmount </p>
+                        <p>Total sale: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport.FirstOrDefault().AmericanExpressAmount)</p>
                     </div>
                     <div class="col-xs-9">
-                        <p>Sale count: @cardTypeReport.FirstOrDefault().AmericanExpressCount </p>
+                        <p>Sale count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport.FirstOrDefault().AmericanExpressCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total return: @cardTypeReport.FirstOrDefault().AmericanExpressReturnAmount</p>
+                        <p>Total return: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport.FirstOrDefault().AmericanExpressReturnAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Return count: @cardTypeReport.FirstOrDefault().AmericanExpressReturnCount</p>
+                        <p>Return count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport.FirstOrDefault().AmericanExpressReturnCount)</p>
                     </div>
                 </div>
             </div>
@@ -230,26 +215,26 @@
                 <h3>Debit Card</h3>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total revenue: @cardTypeReport[0].DebitCardNetAmount </p>
+                        <p>Total revenue: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DebitCardNetAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Total transaction: @cardTypeReport[0].DebitCardTransactionCount  </p>
+                        <p>Total transaction: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DebitCardTransactionCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total sale: @cardTypeReport[0].DebitCardAmount </p>
+                        <p>Total sale: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DebitCardAmount)</p>
                     </div>
                     <div class="col-xs-9">
-                        <p>Sale count: @cardTypeReport[0].DebitCardCount </p>
+                        <p>Sale count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DebitCardCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total return: @cardTypeReport[0].DebitCardReturnAmount</p>
+                        <p>Total return: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DebitCardReturnAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Return count: @cardTypeReport[0].DebitCardReturnCount</p>
+                        <p>Return count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DebitCardReturnCount)</p>
                     </div>
                 </div>
             </div>
@@ -258,26 +243,26 @@
                 <h3>Discover Card</h3>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total revenue: @cardTypeReport[0].DiscoverCardNetAmount</p>
+                        <p>Total revenue: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DiscoverCardNetAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Total transaction: @cardTypeReport[0].DiscoverCardTransactionCount  </p>
+                        <p>Total transaction: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DiscoverCardTransactionCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total sale: @cardTypeReport[0].DiscoverCardAmount </p>
+                        <p>Total sale: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DiscoverCardAmount)</p>
                     </div>
                     <div class="col-xs-9">
-                        <p>Sale count: @cardTypeReport[0].DiscoverCardCount </p>
+                        <p>Sale count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DiscoverCardCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total return: @cardTypeReport[0].DiscoverCardReturnAmount</p>
+                        <p>Total return: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DiscoverCardReturnAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Return count: @cardTypeReport[0].DiscoverCardReturnCount</p>
+                        <p>Return count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].DiscoverCardReturnCount)</p>
                     </div>
                 </div>
             </div>
@@ -286,26 +271,26 @@
                 <h3>Foreign Card</h3>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total revenue: @cardTypeReport[0].ForeignCardNetAmount</p>
+                        <p>Total revenue: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].ForeignCardNetAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Total transaction: @cardTypeReport[0].ForeignCardTransactionCount  </p>
+                        <p>Total transaction: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].ForeignCardTransactionCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total sale: @cardTypeReport[0].ForeignCardAmount </p>
+                        <p>Total sale: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].ForeignCardAmount)</p>
                     </div>
                     <div class="col-xs-9">
-                        <p>Sale count: @cardTypeReport[0].ForeignCardCount </p>
+                        <p>Sale count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].ForeignCardCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total return: @cardTypeReport[0].ForeignCardReturnAmount</p>
+                        <p>Total return: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].ForeignCardReturnAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Return count: @cardTypeReport[0].ForeignCardReturnCount</p>
+                        <p>Return count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].ForeignCardReturnCount)</p>
                     </div>
                 </div>
             </div>
@@ -314,26 +299,26 @@
                 <h3>Master Card</h3>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total revenue: @cardTypeReport[0].MasterCardNetAmount</p>
+                        <p>Total revenue: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].MasterCardNetAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Total transaction: @cardTypeReport[0].MasterCardTransactionCount  </p>
+                        <p>Total transaction: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].MasterCardTransactionCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total sale: @cardTypeReport[0].MasterCardAmount </p>
+                        <p>Total sale: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].MasterCardAmount)</p>
                     </div>
                     <div class="col-xs-9">
-                        <p>Sale count: @cardTypeReport[0].MasterCardCount </p>
+                        <p>Sale count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].MasterCardCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total return: @cardTypeReport[0].MasterCardReturnAmount</p>
+                        <p>Total return: @(cardTypeReport.Count() == 0 ? 0 :@cardTypeReport[0].MasterCardReturnAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Return count: @cardTypeReport[0].MasterCardReturnCount</p>
+                        <p>Return count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].MasterCardReturnCount)</p>
                     </div>
                 </div>
             </div>
@@ -342,26 +327,26 @@
                 <h3>Visa Card</h3>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total revenue: @cardTypeReport[0].VisaCardNetAmount </p>
+                        <p>Total revenue: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].VisaCardNetAmount )</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Total transaction: @cardTypeReport[0].VisaCardTransactionCount  </p>
+                        <p>Total transaction: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].VisaCardTransactionCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total sale: @cardTypeReport[0].VisaCardAmount </p>
+                        <p>Total sale: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].VisaCardAmount)</p>
                     </div>
                     <div class="col-xs-9">
-                        <p>Sale count: @cardTypeReport[0].VisaCardCount </p>
+                        <p>Sale count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].VisaCardCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total return: @cardTypeReport[0].VisaCardReturnAmount</p>
+                        <p>Total return: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].VisaCardReturnAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Return count: @cardTypeReport[0].VisaCardReturnCount</p>
+                        <p>Return count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].VisaCardReturnCount)</p>
                     </div>
                 </div>
             </div>
@@ -370,26 +355,26 @@
                 <h3>Master Card</h3>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total revenue: @cardTypeReport[0].OtherCardNetAmount</p>
+                        <p>Total revenue: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].OtherCardNetAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Total transaction: @cardTypeReport[0].OtherCardTransactionCount  </p>
+                        <p>Total transaction: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].OtherCardTransactionCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total sale: @cardTypeReport[0].OtherCardAmount </p>
+                        <p>Total sale: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].OtherCardAmount)</p>
                     </div>
                     <div class="col-xs-9">
-                        <p>Sale count: @cardTypeReport[0].OtherCardCount </p>
+                        <p>Sale count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].OtherCardCount)</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total return: @cardTypeReport[0].OtherCardReturnAmount</p>
+                        <p>Total return: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].OtherCardReturnAmount)</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Return count: @cardTypeReport[0].OtherCardReturnCount</p>
+                        <p>Return count: @(cardTypeReport.Count() == 0 ? 0 : @cardTypeReport[0].OtherCardReturnCount)</p>
                     </div>
                 </div>
             </div>
@@ -452,15 +437,15 @@
                         <p>Total sale: @SouthVN.SaleAmount </p>
                     </div>
                     <div class="col-xs-9">
-                        <p>Sale count: @SouthVN.SaleCount </p>
+                        <p>Sale count: @NorthVN.SaleCount </p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-9">
-                        <p>Total return: @SouthVN.ReturnAmount</p>
+                        <p>Total return: @NorthVN.ReturnAmount</p>
                     </div>
                     <div class="col-xs-9 ">
-                        <p>Return count: @SouthVN.ReturnCount</p>
+                        <p>Return count: @NorthVN.ReturnCount</p>
                     </div>
                 </div>
             </div>
@@ -803,7 +788,7 @@
             <div class="panel-body">
                 <div id="morris-line-chart"></div>
                 <div id="detailRevenueBtn" class="text-right" onclick="Display('detailRevenueBtn','RevenueModal',0)">
-                    <a>View Details <i class="fa fa-arrow-circle-up"></i></a>
+                  
                 </div>
             </div>
         </div>
@@ -866,7 +851,7 @@
             var LineData = String.Empty;
             var CardTypeData = String.Empty;
 
-            foreach (MERCHANT_SUMMARY_DAILY item in listMerchantType)
+            foreach (MERCHANT_SUMMARY item in listMerchantType)
             {
                 if (item.MerchantType == null)
                 {
@@ -885,14 +870,14 @@
                 {
                     item.Name = "Khác";
                 }
-                LineData += "{d: \"{0}\", sales: {1} },".Replace("{0}", item.Name).Replace("{1}", item.Value.ToString());
+                LineData += "{d: \"{0}\", sales: {1},returns:{2},count: {3} },".Replace("{0}", item.Name).Replace("{1}", item.Value.ToString()).Replace("{2}", item.ReturnAmount.ToString()).Replace("{3}", item.TransactionCount.ToString());
             }
             if (LineData.Length > 1)
             {
                 LineData = LineData.Substring(0, LineData.Length - 1);
             }
 
-            foreach (MERCHANT_SUMMARY_DAILY item in listRegion)
+            foreach (MERCHANT_SUMMARY item in listRegion)
             {
                 if (item.RegionCode == null)
                 {
@@ -906,7 +891,7 @@
             }
 
 
-            foreach (MERCHANT_SUMMARY_DAILY item in cardTypeReport)
+            foreach (MERCHANT_SUMMARY item in cardTypeReport)
             {
                 CardTypeData += "{label: \"{0}\", data: {1} },".Replace("{0}", "Foreign Card").Replace("{1}", item.ForeignCardAmount.ToString());
                 CardTypeData += "{label: \"{0}\", data: {1} },".Replace("{0}", "Debit Card").Replace("{1}", item.DebitCardAmount.ToString());
@@ -960,7 +945,7 @@
             pointFillColors: ['#FF3300'],
             hoverCallback: function (index, options, content) {
                 var data = options.data[index];
-                content = "<div class='morris-hover-row-label'>" + data.d + "</div><div class='morris-hover-point' style='color: #0b62a4'> Sale Amount: $" + data.sales + "</div>"
+                content = "<div class='morris-hover-row-label'>" + data.d + "</div><div class='morris-hover-point' style='color: #0b62a4'>Sale Amount: $" + data.sales + "<br>Return Amount: $"+ -data.returns+ "<br>Transactions: "+ data.count+ "</div>"
                 return content
             },
         });
@@ -1054,10 +1039,7 @@
         var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
 
         var startDay = $('#startDay').datepicker({
-            format: "dd/mm/yyyy",
-            onRender: function (date) {
-                return date.valueOf() < now.valueOf() ? 'disabled' : '';
-            }
+            format: "dd/mm/yyyy"
         }).on('changeDate', function (ev) {
             if (ev.date.valueOf() > endDay.date.valueOf()) {
                 var newDate = new Date(ev.date)
@@ -1071,7 +1053,7 @@
         var endDay = $('#endDay').datepicker({
             format: "dd/mm/yyyy",
             onRender: function (date) {
-                return date.valueOf() <= startDay.date.valueOf() ? 'disabled' : '';
+                
             }
         }).on('changeDate', function (ev) {
             endDay.hide();
@@ -1135,6 +1117,35 @@
             endYear.hide();
         }).data('datepicker');
 
+        //Quarter
+        var startQuarter = $('#startQuarterYear').datepicker({
+            format: " yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            onRender: function (date) {
+                return date.valueOf() < now.valueOf() ? 'disabled' : '';
+            }
+        }).on('changeDate', function (ev) {
+            if (ev.date.valueOf() > endYear.date.valueOf()) {
+                var newDate = new Date(ev.date)
+                newDate.setDate(newDate.getDate() + 1);
+                endYear.setValue(newDate);
+            }
+            startQuarter.hide();
+            $('#endQuarterYear')[0].focus();
+        }).data('datepicker');
+
+        var endQuarter = $('#endQuarterYear').datepicker({
+            format: " yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            onRender: function (date) {
+                return date.valueOf() <= startYear.date.valueOf() ? 'disabled' : '';
+            }
+        }).on('changeDate', function (ev) {
+            endQuarter.hide();
+        }).data('datepicker');
+
     });
 </script>
 
@@ -1142,52 +1153,78 @@
     $(document).ready(function () {
         var dateFormat = 'YYYYMMDD';
         $('#viewThisMonth').click(function () {
-            $("#startdate").attr("value", moment().startOf('month').format(dateFormat));
-            $("#enddate").attr("value", moment().endOf('month').format(dateFormat));
-            $("#reportType").attr("value", "Month");
+            $("#reportStartDate").attr("value", moment().startOf('month').format(dateFormat));
+            $("#reportEndDate").attr("value", moment().startOf('day').format(dateFormat));
+            $("#reportType").attr("value", "Day");
             $("#mainform").submit();
-
-            console.log(moment().startOf('month').format(dateFormat));
-            console.log(moment().endOf('month').format(dateFormat));
         });
 
         $('#viewThisYear').click(function () {
-            $("#startdate").attr("value", moment().startOf('year').format(dateFormat));
-            $("#enddate").attr("value", moment().endOf('year').format(dateFormat));
+            $("#reportStartMonth").attr("value", '1');
+            $("#reportEndMonth").attr("value", moment().startOf('month').format('MM'));
+            $("#reportStartYear").attr("value", moment().startOf('year').format('YYYY'));
+            $("#reportEndYear").attr("value", moment().startOf('year').format('YYYY'));
+            $("#reportType").attr("value", "Month");
             $("#mainform").submit();
-
-            console.log(moment().startOf('year').format(dateFormat));
-            console.log(moment().endOf('year').format(dateFormat));
         });
 
         $('#viewThisQuarter').click(function () {
-            $("#startdate").attr("value", moment().startOf('quarter').format(dateFormat));
-            $("#enddate").attr("value", moment().endOf('quarter').format(dateFormat));
+            $("#reportStartMonth").attr("value", moment().startOf('quarter').format('MM'));
+            $("#reportEndMonth").attr("value", moment().startOf('month').format('MM'));
+            $("#reportStartYear").attr("value", moment().startOf('year').format('YYYY'));
+            $("#reportEndYear").attr("value", moment().startOf('year').format('YYYY'));
+            $("#reportType").attr("value", "Month");
             $("#mainform").submit();
-
-            console.log(moment().startOf('quarter').format(dateFormat));
-            console.log(moment().endOf('quarter').format(dateFormat));
         });
 
         $('#viewDay').click(function () {
-            $("#startdate").attr("value", moment($('#startDay').val(), "DD/MM/YYYY").format(dateFormat));
-            $("#enddate").attr("value", moment($('#endDay').val(), "DD/MM/YYYY").format(dateFormat));
+            $("#reportStartDate").attr("value", moment($('#startDay').val(), "DD/MM/YYYY").format(dateFormat));
+            $("#reportEndDate").attr("value", moment($('#endDay').val(), "DD/MM/YYYY").format(dateFormat));
+            $("#reportType").attr("value", "Day");
             $("#mainform").submit();
-
-            console.log(moment($('#startDay').val(), "DD/MM/YYYY").format(dateFormat));
-            console.log(moment($('#endDay').val(), "DD/MM/YYYY").format(dateFormat));
         });
 
         $('#viewMonth').click(function () {
-            $("#startdate").attr("value", moment("01/" + $('#startMonth').val(), "DD/MM/YYYY").format(dateFormat));
-            $("#enddate").attr("value", moment("01/" + $('#endMonth').val(), "DD/MM/YYYY").endOf("month").format(dateFormat));
-            $("#mainform").submit();
+            var startDateUserInput = moment("01/" + $('#startMonth').val(), "DD/MM/YYYY");
+            var endDateUserInput = moment("01/" + $('#endMonth').val(), "DD/MM/YYYY");
 
-            console.log(moment("01/" + $('#startMonth').val(), "DD/MM/YYYY").format(dateFormat));
-            console.log(moment("01/" + $('#endMonth').val(), "DD/MM/YYYY").endOf("month").format(dateFormat));
+            if ($('#startMonth').val() === $('#endMonth').val()) {
+                $("#reportStartDate").attr("value", startDateUserInput.format(dateFormat));
+                $("#reportEndDate").attr("value", endDateUserInput.endOf("month").format(dateFormat));
+                $("#reportType").attr("value", "Day");
+            } else {
+                $("#reportStartMonth").attr("value", startDateUserInput.format('MM'));
+                $("#reportEndMonth").attr("value", endDateUserInput.format('MM'));
+                $("#reportStartYear").attr("value", startDateUserInput.format('YYYY'));
+                $("#reportEndYear").attr("value", endDateUserInput.format('YYYY'));
+                $("#reportType").attr("value", "Month");
+            }
+           
+            $("#mainform").submit();
         });
 
         $('#viewQuarter').click(function () {
+            var startQuarterRp = document.getElementById('startQuarter').value;
+            var endQuarterRp = document.getElementById('endQuarter').value;
+            var startYearRp = $('#startQuarterYear').val().trim();
+            var endYearRp = $('#endQuarterYear').val().trim();
+
+            if ((startQuarterRp === endQuarterRp) && (startYearRp === endYearRp)) { //report by month
+                $("#reportStartMonth").attr("value", (startQuarterRp - 1) * 3 + 1);
+                $("#reportEndMonth").attr("value", (endQuarterRp - 1) * 3 + 1);
+                $("#reportStartYear").attr("value", startYearRp);
+                $("#reportEndYear").attr("value", startYearRp);
+                $("#reportType").attr("value", "Month");
+                $("#mainform").submit();
+            } else { //report by quarter
+                $("#reportStartQuarter").attr("value", startQuarterRp);
+                $("#reportEndQuarter").attr("value", endQuarterRp);
+                $("#reportStartYear").attr("value", startYearRp);
+                $("#reportEndYear").attr("value", endYearRp);
+                $("#reportType").attr("value", "Quarter");
+                $("#mainform").submit();
+            }
+
             $("#startdate").attr("value", moment("01/" + $('#startQuarter').val(), "DD/MM/YYYY").format(dateFormat));
             $("#enddate").attr("value", moment("01/" + $('#endQuarter').val(), "DD/MM/YYYY").endOf("month").format(dateFormat));
             $("#mainform").submit();
@@ -1197,12 +1234,18 @@
         });
 
         $('#viewYear').click(function () {
-            $("#startdate").attr("value", moment("01/01/" + $('#startYear').val(), "DD/MM/ YYYY").format(dateFormat));
-            $("#enddate").attr("value", moment("31/12/" + $('#endYear').val(), "DD/MM/ YYYY").endOf("year").format(dateFormat));
-            $("#mainform").submit();
+            if ($('#startYear').val() === $('#endYear').val()) {
+                $("#reportStartMonth").attr("value", '1');
+                $("#reportEndMonth").attr("value", '12');
+               
+                $("#reportType").attr("value", "Month");
+            } else {
+                $("#reportType").attr("value", "Year");
+            }
+            $("#reportStartYear").attr("value", $('#startYear').val().replace(" ", ""));
+            $("#reportEndYear").attr("value", $('#endYear').val().replace(" ", ""));
 
-            console.log(moment("01/01/" + $('#startYear').val(), "DD/MM/ YYYY").format(dateFormat));
-            console.log(moment("31/12/" + $('#endYear').val(), "DD/MM/ YYYY").endOf("year").format(dateFormat));
+            $("#mainform").submit();
         });
 
     });

@@ -20,6 +20,21 @@
 @section header{
     Danh sách các Merchant
 }
+<style>
+    #mySidenav li {
+        list-style-type: none;
+        margin-left: 10%;
+        font-weight: lighter;
+    }
+
+    li > label{
+        font-weight: lighter;
+    }
+    .btn-default{
+        font-weight: bold;
+    }
+
+</style>
 <link href="~/Assets/css/myStyle.css" rel="stylesheet" />
 <script type="text/javascript">
     function OnComplete(code) {
@@ -64,52 +79,43 @@
 }
 
 
+
+
 @using (Html.BeginForm("Merchant", "Management", FormMethod.Get))
 {
     <div id="mySidenav" class="sidenavFilter" style="top:25%">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-                Loại merchant
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-                @foreach (var item in MerchantType)
-                {
-                    <li><input id="@item.Value" class="CheckValue" type="checkbox" name="MerchantTypeValue" value="@item.Value">@item.Text</li>
-                }
-            </ul>
+
+        <button type="button" style="width:98%" class="btn btn-default" data-toggle="collapse" data-target="#MerchantType" >Loại merchant</button>
+        <div id="MerchantType" class="collapse">
+            @foreach (var item in MerchantType)
+            {
+                <li><label><input id="@item.Value" class="CheckValue" type="checkbox" name="MerchantTypeValue" value="@item.Value">@item.Text</label></li>
+            }
+        </div>
+
+        <button type="button" style="width:98%" class="btn btn-default" data-toggle="collapse" data-target="#RegionType">Vùng Miền</button>
+        <div id="RegionType" class="collapse">
+            @foreach (var item in RegionType)
+            {
+                <li><label><input id="@item.Value" class="CheckValue" type="checkbox" name="RegionTypeValue" value="@item.Value">@item.Text</label></li>
+            }
+        </div>
+
+        <button type="button" style="width:98%" class="btn btn-default" data-toggle="collapse" data-target="#status">Status</button>
+        <div id="status" class="collapse">
+
+            <li><label><input id=" a" class="CheckValue" type="checkbox" name="ActiveTypeValue" value="A">Active</label></li>
+            <li><label><input id="I" class="CheckValue" type="checkbox" name="ActiveTypeValue" value="I">Inactive</label></li>
+
         </div>
         <br>
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-                Vùng Miền
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-                @foreach (var item in RegionType)
-                {
-                    <li><input id="@item.Value" class="CheckValue" type="checkbox" name="RegionTypeValue" value="@item.Value">@item.Text</li>
-                }
-            </ul>
-        </div>
-        <br>
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-                Trạng thái
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-                <li><input id="A" class="CheckValue" type="checkbox" name="ActiveTypeValue" value="A">Active</li>
-                <li><input id="I" class="CheckValue" type="checkbox" name="ActiveTypeValue" value="I">Inactive</li>
-            </ul>
-        </div>
-        <br>
-        <p>
-            <button id="btnMerchantType" type="submit" class="btn btn-primary">Filter</button>
-            <button id="cleanCheckbox" type="submit" class="btn btn-primary">Clean</button>
-        </p>
-        
+        <center>
+            <p>
+                <button id="btnMerchantType" type="submit" class="btn btn-primary">Filter</button>
+                <button id="cleanCheckbox" type="submit" class="btn btn-primary">Clean</button>
+            </p>
+        </center>
     </div>
 
 }
@@ -166,22 +172,24 @@
                                                    HttpMethod = "Post"
                                                }, new { id = "btnStatus_" + @item.MerchantCode, @class = "btn btn-danger" })
 
-                                            }
-                                        </td>
-                                        <td>@item.Owner</td>
-                                        <td>@item.Address1</td>
-                                        <td>@item.CityName</td>
-                                        <td>@item.LastActiveDate.Value.ToString("yyyy-MM-dd")</td>
-                                        <td>@item.CloseDate.Value.ToString("yyyy-MM-dd")</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                        @Html.PagedListPager(Model, Page => Url.Action(@ViewBag.action, "Management", new { Page, @searchString = @ViewBag.searchString, @agentCode = @ViewBag.agentCode, @MerchantType = ViewBag.tempMerchantType, @RegionType = ViewBag.tempRegionType, @Active = ViewBag.tempActive }))
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
+                                                    }
+                                                </td>
+                                                <td>@item.Owner</td>
+                                                <td>@item.Address1</td>
+                                                <td>@item.CityName</td>
+                                                <td>@(String.IsNullOrEmpty(item.LastActiveDate.ToString()) ? "" : item.LastActiveDate.Value.ToString("yyyy-MM-dd"))</td>
+                                                <td>@(String.IsNullOrEmpty(item.CloseDate.ToString()) ? "" : item.CloseDate.Value.ToString("yyyy-MM-dd"))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                @Html.PagedListPager(Model, Page => Url.Action(@ViewBag.action, "Management", new { Page, @searchString = @ViewBag.searchString, @agentCode = @ViewBag.agentCode, @MerchantType = ViewBag.tempMerchantType, @RegionType = ViewBag.tempRegionType, @Active = ViewBag.tempActive }))
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
 
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -190,11 +198,11 @@
     </div>
 </div>
 
-<div class="col-md-11 text-right">
-    <a href="@Url.Action("ExportPDF", "Management", new { searchString = ViewBag.searchString })" class="btn btn-primary">PDF</a>
-    <a href="@Url.Action("MerchantExportExcel", "Management", new { searchString = ViewBag.searchString })" class="btn btn-primary">Excel</a>
-    <a href="@Url.Action("MerchantExportCSV", "Management", new { searchString = ViewBag.searchString })" class="btn btn-primary">CSV</a>
-</div>
+        <div class="col-md-11 text-right">
+            <a href="@Url.Action("ExportMerchantPDF", "Management", new { searchString = ViewBag.searchString })" class="btn btn-primary">PDF</a>
+            <a href="@Url.Action("MerchantExportExcel", "Management", new { searchString = ViewBag.searchString })" class="btn btn-primary">Excel</a>
+            <a href="@Url.Action("MerchantExportCSV", "Management", new { searchString = ViewBag.searchString })" class="btn btn-primary">CSV</a>
+        </div>
 
 <script type="text/javascript">
     @if (MerchantTypeValue != null)
